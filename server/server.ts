@@ -219,7 +219,11 @@ const resolvers = {
 
 const server = new ApolloServer({
     typeDefs,
-    resolvers
+    resolvers,
+    // disable preflight request
+    cors: {
+        maxAge: 600
+    }
 });
 
 server.listen().then(({url}) => {

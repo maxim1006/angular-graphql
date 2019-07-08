@@ -1,21 +1,10 @@
 {
+    "extends": "./tsconfig.app.json",
     "compilerOptions": {
-        "lib": [
-            "es6",
-            "dom",
-            "esnext.asynciterable"
-        ],
         "module": "commonjs",
-        "noImplicitReturns": false,
-        "outDir": "./server",
-        "sourceMap": true,
-        "allowSyntheticDefaultImports": true,
-        "target": "es2017"
+        "outDir": "./out-tsc/app-server"
     },
-    "compileOnSave": true,
-    "include": [
-        "./server"
-    ],
-    "exclude": []
+    "angularCompilerOptions": {
+        "entryModule": "./src/app/app.server.module#AppServerModule"
+    }
 }
-

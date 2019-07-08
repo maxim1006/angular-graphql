@@ -14,7 +14,7 @@ import {pluck} from 'rxjs/operators';
                 </li>
             </ul>
         </ng-container>
-        
+
         <ng-template #loader>
             Loading family...
         </ng-template>
@@ -24,11 +24,13 @@ import {pluck} from 'rxjs/operators';
 export class FamilyListComponent implements OnInit {
     family$: Observable<any>;
 
-    constructor(private apollo: Apollo) {}
+    constructor(private apollo: Apollo) {
+    }
 
     ngOnInit() {
         let obs = this.family$ = this.apollo.watchQuery({
-            query: familyQuery
+            query: familyQuery,
+            fetchPolicy: 'no-cache' // disable cache
         })
             .valueChanges.pipe(pluck('data', 'family'));
     }

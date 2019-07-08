@@ -3,6 +3,10 @@ https://github.com/arjunyel/angular-apollo-example
 
 ng add apollo-angular
 
+npm i apollo-server -D
+ npm i @types/graphql
+
+
 
 
 // Опционально для авто генерации
@@ -21,6 +25,16 @@ npm i apollo:gen:a
 
 Пока решил так не делать и с import {Apollo} from 'apollo-angular'; все удобно
 /////////////////////////////////
+
+
+
+// run compile
+npm run build
+npm run build:ssr
+
+// run watch
+npm run serve:gql
+npm run serve:ssr:ts
 
 
 
