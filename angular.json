@@ -29,7 +29,11 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [],
+            "scripts": [
+                {
+                    "input": "src/assets/init-data/data.js"
+                }
+            ],
             "aot": true
           },
           "configurations": {

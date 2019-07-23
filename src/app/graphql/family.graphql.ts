@@ -10,3 +10,13 @@ export const familyQuery = gql`
         }
     }
 `;
+
+export const familyQueryNumber = gql`
+    query familyMembers($membersNumber: FamilyMembersArgs!) {
+        familyMembers(membersNumber: $membersNumber) {
+            members {
+                name
+            }
+        }
+    }
+`;

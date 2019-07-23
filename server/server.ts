@@ -23,6 +23,10 @@ interface Tweet {
     userId: string;
 }
 
+interface FamilyMembersArgs {
+    number: number;
+}
+
 
 // type definitions - описываю форму даты доступной на сервере
 // ! - значит вернуть только этот тип
@@ -70,8 +74,14 @@ const typeDefs = gql`
         createdBy: String!
     }
 
+    # INPUTS
+    input FamilyMembersArgs {
+        number: Int!
+    }
+
     type Query {
         family: Family
+        familyMembers(membersNumber: FamilyMembersArgs!): Family
         tweets: [Tweet]
         users: [Users]
         user(id: String!): User
@@ -81,6 +91,7 @@ const typeDefs = gql`
         hello: String
     }
 
+    # MUTATIONS
     type Mutation {
         likeTweet(id: ID!): Tweet
     }
@@ -90,13 +101,27 @@ const typeDefs = gql`
 const resolvers = {
     Query: {
         hello: () => 'world',
-        async family() {
+        async family(_: null, args: { membersNumber: number }) {
             const membersDoc = await admin
                 .firestore()
                 .doc('family/members')
                 .get();
 
             const members = membersDoc.data().all.map(item => item);
+
+            return {
+                members
+            };
+        },
+        async familyMembers(_: null, args: { membersNumber: FamilyMembersArgs }) {
+            const membersDoc = await admin
+                .firestore()
+                .doc('family/members')
+                .get();
+
+            const members =
+                membersDoc.data().all.map(item => item)
+                    .slice(0, args.membersNumber.number);
 
             return {
                 members

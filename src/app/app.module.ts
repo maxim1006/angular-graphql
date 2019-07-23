@@ -4,26 +4,30 @@ import {Inject, NgModule, PLATFORM_ID} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HttpClientModule} from '@angular/common/http';
-import {FamilyListComponent} from './components/family-list/family-list.component';
+import {GqlQueryComponent} from './components/gql-query/gql-query.component';
 import {Apollo, ApolloModule} from 'apollo-angular';
 import {HttpLink, HttpLinkModule} from 'apollo-angular-link-http';
 import {isPlatformServer} from '@angular/common';
 import {InMemoryCache} from 'apollo-cache-inmemory';
+import {GqlMutationComponent} from './components/gql-mutation/gql-mutation.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
 const STATE_KEY = makeStateKey<any>('apollo.state');
 
 @NgModule({
     declarations: [
         AppComponent,
-        FamilyListComponent
+        GqlQueryComponent,
+        GqlMutationComponent
     ],
     imports: [
-        BrowserModule.withServerTransition({ appId: 'serverApp' }),
+        BrowserModule.withServerTransition({appId: 'serverApp'}),
         BrowserTransferStateModule,
         AppRoutingModule,
         ApolloModule,
         HttpLinkModule,
-        HttpClientModule
+        HttpClientModule,
+        ReactiveFormsModule
     ],
     providers: [],
     bootstrap: [AppComponent]
@@ -41,10 +45,19 @@ export class AppModule {
             this.cache = new InMemoryCache();
 
             const isBrowser = this.transferState.hasKey<any>(STATE_KEY);
-            const uri = 'http://localhost:4000/';
+            const uri = window['gqlDemo'].gql.url;
+            const link = httpLink.create({uri});
+
+            // для установки хедеров в запросы
+            // https://www.apollographql.com/docs/angular/migration/
+            // const middleware = setContext((value) => {
+            //     console.log('middleware setContext ', value);
+            // });
+
+            // const link = middleware.concat(http);
 
             apollo.create({
-                link: httpLink.create({uri}),
+                link,
                 cache: this.cache,
                 ...(isBrowser
                     ? {
@@ -62,6 +75,13 @@ export class AppModule {
             } else {
                 this.onServer();
             }
+
+
+            // так получаю кеш всего что сейчас есть в gql
+            const state = this.cache.extract();
+            setTimeout(() => {
+                console.log('all cache ', state);
+            }, 3000);
         }
     }
 
